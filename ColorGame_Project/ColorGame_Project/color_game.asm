@@ -14,7 +14,7 @@ border	 BYTE "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .code
 main PROC
 ; Setting base background
-    mov    eax,lightMagenta + (lightGray * 16)
+    mov    eax,lightMagenta + (gray * 16)
     call    SetTextColor
     call    Clrscr            ; clear the screen
     call    Crlf                ; new line
@@ -23,37 +23,37 @@ main PROC
     mov	 edx, OFFSET border
     call	 WriteString
     call	 Crlf
-    mov    eax,red + (lightGray * 16)
+    mov    eax,red + (gray * 16)
     call    SetTextColor
     mov    edx,OFFSET game1
     call   WriteString
-    mov	 eax, lightRed + (lightGray * 16)
+    mov	 eax, lightRed + (gray * 16)
     call	 SetTextColor
     mov    edx,OFFSET game2
     call   WriteString
-    mov	 eax, yellow + (lightGray * 16)
+    mov	 eax, yellow + (gray * 16)
     call	 SetTextColor
     mov    edx,OFFSET game3
     call   WriteString
-    mov	 eax, green + (lightGray * 16)
+    mov	 eax, green + (gray * 16)
     call	 SetTextColor
     mov    edx,OFFSET game4
     call   WriteString
-    mov	 eax, blue + (lightGray * 16)
+    mov	 eax, blue + (gray * 16)
     call	 SetTextColor
     mov    edx,OFFSET game5
     call   WriteString
-    mov	 eax, magenta + (lightGray * 16)
+    mov	 eax, magenta + (gray * 16)
     call	 SetTextColor
     mov    edx,OFFSET game6
     call   WriteString
     call	 Crlf
-    mov	 eax, lightCyan + (lightGray * 16)
+    mov	 eax, lightCyan + (gray * 16)
     call	 SetTextColor
     mov	 edx, OFFSET rules
     call	 WriteString
     call    Crlf
-    mov	 eax, lightMagenta + (lightGray * 16)
+    mov	 eax, lightMagenta + (gray * 16)
     call	 SetTextColor
     mov	 edx, OFFSET border
     call	 WriteString
