@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.41.34123.0	    03/27/25 21:49:32
+Microsoft (R) Macro Assembler Version 14.41.34123.0	    03/31/25 14:15:36
 color_game.asm						     Page 1 - 1
 
 
@@ -90,35 +90,27 @@ color_game.asm						     Page 1 - 1
  00000125 20 00			space      BYTE " ",0
  00000127 0D 00			return     BYTE 13, 0
  00000129 52 45 44 00		redText    BYTE "RED", 0
- 0000012D 4F 52 41 4E 47	orangeText BYTE "ORANGE",0
-	   45 00
- 00000134 59 45 4C 4C 4F	yellowText BYTE "YELLOW", 0
+ 0000012D 59 45 4C 4C 4F	yellowText BYTE "YELLOW", 0
 	   57 00
- 0000013B 47 52 45 45 4E	greenText  BYTE "GREEN", 0
+ 00000134 47 52 45 45 4E	greenText  BYTE "GREEN", 0
 	   00
- 00000141 42 4C 55 45 00	blueText   BYTE "BLUE", 0
- 00000146 50 55 52 50 4C	purpleText BYTE "PURPLE", 0
+ 0000013A 42 4C 55 45 00	blueText   BYTE "BLUE", 0
+ 0000013F 50 55 52 50 4C	purpleText BYTE "PURPLE", 0
 	   45 00
- 0000014D 50 49 4E 4B 00	pinkText   BYTE "PINK", 0
- 00000152 42 52 4F 57 4E	brownText  BYTE "BROWN", 0
+ 00000146 42 4C 41 43 4B	blackText  BYTE "BLACK", 0
 	   00
- 00000158 42 4C 41 43 4B	blackText  BYTE "BLACK", 0
+ 0000014C 57 48 49 54 45	whiteText  BYTE "WHITE", 0
 	   00
- 0000015E 57 48 49 54 45	whiteText  BYTE "WHITE", 0
-	   00
- 00000164 47 52 41 59 00	grayText   BYTE "GRAY", 0
- 00000169 00000129 R		colorText  DWORD OFFSET redText, OFFSET orangeText, OFFSET yellowText, OFFSET greenText, OFFSET blueText, OFFSET purpleText, OFFSET pinkText, OFFSET brownText, OFFSET blackText, OFFSET whiteText, OFFSET grayText
+ 00000152 47 52 41 59 00	grayText   BYTE "GRAY", 0
+ 00000157 00000129 R		colorText  DWORD OFFSET redText, OFFSET yellowText, OFFSET greenText, OFFSET blueText, OFFSET purpleText, OFFSET blackText, OFFSET whiteText, OFFSET grayText
 	   0000012D R
 	   00000134 R
-	   0000013B R
-	   00000141 R
+	   0000013A R
+	   0000013F R
 	   00000146 R
-	   0000014D R
+	   0000014C R
 	   00000152 R
-	   00000158 R
-	   0000015E R
-	   00000164 R
- 00000195 00000004		colorDisplay  DWORD red, yellow, green, blue, magenta, black, white, lightGray
+ 00000177 00000004		colorDisplay  DWORD red, yellow, green, blue, magenta, black, white, lightGray
 	   0000000E
 	   00000002
 	   00000001
@@ -223,7 +215,7 @@ color_game.asm						     Page 1 - 1
 
 				       ; Getting color from array
  0000013D  8B 04 9D		       mov    eax, [colorDisplay + ebx*4]
-	   00000195 R
+	   00000177 R
  00000144  BA 00000008		       mov    edx, gray
  00000149  C1 E2 04		       shl    edx, 4
  0000014C  03 C2		       add    eax, edx
@@ -231,18 +223,18 @@ color_game.asm						     Page 1 - 1
 
 				       ; Saving current color text for later comparison
  00000153  8B 04 9D		       mov    eax, [colorText + ebx*4]
-	   00000169 R
+	   00000157 R
  0000015A  A3 0000000C R	       mov    currColor, eax
 
 
 				       ; Random Text
- 0000015F  B8 0000000B		       mov   eax, 11
+ 0000015F  B8 00000008		       mov   eax, 8
  00000164  E8 00000000 E	       call   RandomRange
  00000169  8B D8		       mov    ebx, eax
 
 				       ; Getting color text from array
  0000016B  8B 04 9D		       mov    eax, [colorText + ebx*4]
-	   00000169 R
+	   00000157 R
  00000172  8B D0		       mov    edx, eax
  00000174  A3 00000008 R	       mov    currWord, eax
  00000179  E8 00000000 E	       call   WriteString
@@ -270,7 +262,7 @@ color_game.asm						     Page 1 - 1
 				       ; Timer
  000001A1  E8 00000000 E	       call  GetMseconds
  000001A6  2B 05 00000000 R	       sub   eax, startTime
- 000001AC  3D 00003A98		       cmp   eax, 15000 ; set shorter for testing purposes, change to 60000 for 1 min
+ 000001AC  3D 00007530		       cmp   eax, 30000 ; set shorter for testing purposes, change to 60000 for 1 min
 
  000001B1  0F 8C FFFFFF70	       jl    show_words
  000001B7  EB 00		    jmp   game_over
@@ -295,7 +287,7 @@ color_game.asm						     Page 1 - 1
 
  000001F7			main ENDP
 				END main
-Microsoft (R) Macro Assembler Version 14.41.34123.0	    03/27/25 21:49:32
+Microsoft (R) Macro Assembler Version 14.41.34123.0	    03/31/25 14:15:36
 color_game.asm						     Symbols 2 - 1
 
 
@@ -389,7 +381,7 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 000001B5 Para	  Public  'DATA'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000197 Para	  Public  'DATA'	
 _TEXT  . . . . . . . . . . . . .	32 Bit	 000001F7 Para	  Public  'CODE'	
 
 
@@ -720,15 +712,14 @@ VK_UP  . . . . . . . . . . . . .	Number	 00000026h
 WINDOW_BUFFER_SIZE_EVENT . . . .	Number	 00000004h   
 WriteConsoleOutputCharacter  . .	Text   	 WriteConsoleOutputCharacterA
 WriteConsole . . . . . . . . . .	Text   	 WriteConsoleA
-blackText  . . . . . . . . . . .	Byte	 00000158 _DATA	
+blackText  . . . . . . . . . . .	Byte	 00000146 _DATA	
 black  . . . . . . . . . . . . .	Number	 00000000h   
-blueText . . . . . . . . . . . .	Byte	 00000141 _DATA	
+blueText . . . . . . . . . . . .	Byte	 0000013A _DATA	
 blue . . . . . . . . . . . . . .	Number	 00000001h   
 border . . . . . . . . . . . . .	Byte	 000000B7 _DATA	
-brownText  . . . . . . . . . . .	Byte	 00000152 _DATA	
 brown  . . . . . . . . . . . . .	Number	 00000006h   
-colorDisplay . . . . . . . . . .	DWord	 00000195 _DATA	
-colorText  . . . . . . . . . . .	DWord	 00000169 _DATA	
+colorDisplay . . . . . . . . . .	DWord	 00000177 _DATA	
+colorText  . . . . . . . . . . .	DWord	 00000157 _DATA	
 currColor  . . . . . . . . . . .	DWord	 0000000C _DATA	
 currTime . . . . . . . . . . . .	DWord	 00000004 _DATA	
 currWord . . . . . . . . . . . .	DWord	 00000008 _DATA	
@@ -741,9 +732,9 @@ game4  . . . . . . . . . . . . .	Byte	 00000022 _DATA
 game5  . . . . . . . . . . . . .	Byte	 00000029 _DATA	
 game6  . . . . . . . . . . . . .	Byte	 0000002E _DATA	
 gameover . . . . . . . . . . . .	Byte	 00000030 _DATA	
-grayText . . . . . . . . . . . .	Byte	 00000164 _DATA	
+grayText . . . . . . . . . . . .	Byte	 00000152 _DATA	
 gray . . . . . . . . . . . . . .	Number	 00000008h   
-greenText  . . . . . . . . . . .	Byte	 0000013B _DATA	
+greenText  . . . . . . . . . . .	Byte	 00000134 _DATA	
 green  . . . . . . . . . . . . .	Number	 00000002h   
 guessText  . . . . . . . . . . .	Byte	 0000003B _DATA	
 lightBlue  . . . . . . . . . . .	Number	 00000009h   
@@ -753,9 +744,7 @@ lightGreen . . . . . . . . . . .	Number	 0000000Ah
 lightMagenta . . . . . . . . . .	Number	 0000000Dh   
 lightRed . . . . . . . . . . . .	Number	 0000000Ch   
 magenta  . . . . . . . . . . . .	Number	 00000005h   
-orangeText . . . . . . . . . . .	Byte	 0000012D _DATA	
-pinkText . . . . . . . . . . . .	Byte	 0000014D _DATA	
-purpleText . . . . . . . . . . .	Byte	 00000146 _DATA	
+purpleText . . . . . . . . . . .	Byte	 0000013F _DATA	
 redText  . . . . . . . . . . . .	Byte	 00000129 _DATA	
 red  . . . . . . . . . . . . . .	Number	 00000004h   
 return . . . . . . . . . . . . .	Byte	 00000127 _DATA	
@@ -764,10 +753,10 @@ space  . . . . . . . . . . . . .	Byte	 00000125 _DATA
 startTime  . . . . . . . . . . .	DWord	 00000000 _DATA	
 start  . . . . . . . . . . . . .	Byte	 00000114 _DATA	
 userGuess  . . . . . . . . . . .	Byte	 0000004B _DATA	
-whiteText  . . . . . . . . . . .	Byte	 0000015E _DATA	
+whiteText  . . . . . . . . . . .	Byte	 0000014C _DATA	
 white  . . . . . . . . . . . . .	Number	 0000000Fh   
 wsprintf . . . . . . . . . . . .	Text   	 wsprintfA
-yellowText . . . . . . . . . . .	Byte	 00000134 _DATA	
+yellowText . . . . . . . . . . .	Byte	 0000012D _DATA	
 yellow . . . . . . . . . . . . .	Number	 0000000Eh   
 
 	   0 Warnings

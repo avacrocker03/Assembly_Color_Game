@@ -22,17 +22,14 @@ start      BYTE "STARTING GAME...", 0
 space      BYTE " ",0
 return     BYTE 13, 0
 redText    BYTE "RED", 0
-orangeText BYTE "ORANGE",0
 yellowText BYTE "YELLOW", 0
 greenText  BYTE "GREEN", 0
 blueText   BYTE "BLUE", 0
 purpleText BYTE "PURPLE", 0
-pinkText   BYTE "PINK", 0
-brownText  BYTE "BROWN", 0
 blackText  BYTE "BLACK", 0
 whiteText  BYTE "WHITE", 0
 grayText   BYTE "GRAY", 0
-colorText  DWORD OFFSET redText, OFFSET orangeText, OFFSET yellowText, OFFSET greenText, OFFSET blueText, OFFSET purpleText, OFFSET pinkText, OFFSET brownText, OFFSET blackText, OFFSET whiteText, OFFSET grayText
+colorText  DWORD OFFSET redText, OFFSET yellowText, OFFSET greenText, OFFSET blueText, OFFSET purpleText, OFFSET blackText, OFFSET whiteText, OFFSET grayText
 colorDisplay  DWORD red, yellow, green, blue, magenta, black, white, lightGray
 
 .code
@@ -142,7 +139,7 @@ start_game:
 
 
        ; Random Text
-       mov   eax, 11
+       mov   eax, 8
        call   RandomRange
        mov    ebx, eax
 
@@ -175,7 +172,7 @@ start_game:
        ; Timer
        call  GetMseconds
        sub   eax, startTime
-       cmp   eax, 15000 ; set shorter for testing purposes, change to 60000 for 1 min
+       cmp   eax, 30000 ; set shorter for testing purposes, change to 60000 for 1 min
 
        jl    show_words
     jmp   game_over
