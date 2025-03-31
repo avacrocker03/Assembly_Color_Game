@@ -164,7 +164,7 @@ start_game:
 
        ; COMPARING STRINGS SECTION
        ;loading strings
-       mov esi, OFFSET currColor  ; Point to first string
+       mov esi, [currColor]  ; Point to first string
        mov edi, OFFSET userGuess  ; Point to second string
        
        ;looping through strings
@@ -220,7 +220,7 @@ game_over:
 
     mov edx, OFFSET scoreStr
     call     WriteString
-    mov edx, OFFSET score
+    mov eax, score
     call     WriteDec
     call     Crlf
     exit

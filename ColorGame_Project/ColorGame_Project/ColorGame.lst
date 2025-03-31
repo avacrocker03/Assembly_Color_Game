@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.41.34120.0	    03/31/25 18:17:58
+Microsoft (R) Macro Assembler Version 14.41.34120.0	    03/31/25 19:49:53
 color_game.asm						     Page 1 - 1
 
 
@@ -255,29 +255,29 @@ color_game.asm						     Page 1 - 1
 
 				       ; COMPARING STRINGS SECTION
 				       ;loading strings
- 000001A1  BE 0000000C R	       mov esi, OFFSET currColor  ; Point to first string
- 000001A6  BF 0000004B R	       mov edi, OFFSET userGuess  ; Point to second string
+ 000001A1  8B 35 0000000C R	       mov esi, [currColor]  ; Point to first string
+ 000001A7  BF 0000004B R	       mov edi, OFFSET userGuess  ; Point to second string
 				       
 				       ;looping through strings
- 000001AB			       compare_loop:
- 000001AB  8A 06		            mov al, [esi]  ; Load currColor
- 000001AD  8A 1F		            mov bl, [edi]  ; Load from userGuess
- 000001AF  3A C3		            cmp al, bl
- 000001B1  75 11		            jne not_equal  ; not equal -- jumps out of loop here
+ 000001AC			       compare_loop:
+ 000001AC  8A 06		            mov al, [esi]  ; Load currColor
+ 000001AE  8A 1F		            mov bl, [edi]  ; Load from userGuess
+ 000001B0  3A C3		            cmp al, bl
+ 000001B2  75 11		            jne not_equal  ; not equal -- jumps out of loop here
 				    
- 000001B3  3C 00		            cmp al, 0      ; Check for null terminator
- 000001B5  74 04		            je strings_match ; If null terminator reached, strings match
+ 000001B4  3C 00		            cmp al, 0      ; Check for null terminator
+ 000001B6  74 04		            je strings_match ; If null terminator reached, strings match
 				    
- 000001B7  46			            inc esi        ; Move to next in currColor
- 000001B8  47			            inc edi        ; userGuess
- 000001B9  EB F0		            jmp compare_loop  ;normal loop proc
+ 000001B8  46			            inc esi        ; Move to next in currColor
+ 000001B9  47			            inc edi        ; userGuess
+ 000001BA  EB F0		            jmp compare_loop  ;normal loop proc
 
- 000001BB			        strings_match:
- 000001BB  83 05 00000197 R	            add score, 1  ; Increment score
+ 000001BC			        strings_match:
+ 000001BC  83 05 00000197 R	            add score, 1  ; Increment score
 	   01
- 000001C2  EB 00		            jmp not_equal
+ 000001C3  EB 00		            jmp not_equal
 
- 000001C4			        not_equal: ;not equal -- jumps past inc
+ 000001C5			        not_equal: ;not equal -- jumps past inc
 
 				       ; TODO: have program pause and take user input for guess (ps. set breakpoint to line 199 to have prog continuously run and not have to step)
 				       ;       compare currColor to the userGuess (i believe you have to compare byte by byte lmk if u want help on this)
@@ -288,42 +288,42 @@ color_game.asm						     Page 1 - 1
 
 
 				       ; Timer
- 000001C4  E8 00000000 E	       call  GetMseconds
- 000001C9  2B 05 00000000 R	       sub   eax, startTime
- 000001CF  3D 00007530		       cmp   eax, 30000 ; set shorter for testing purposes, change to 60000 for 1 min
+ 000001C5  E8 00000000 E	       call  GetMseconds
+ 000001CA  2B 05 00000000 R	       sub   eax, startTime
+ 000001D0  3D 00007530		       cmp   eax, 30000 ; set shorter for testing purposes, change to 60000 for 1 min
 
- 000001D4  0F 8C FFFFFF4D	       jl    show_words
- 000001DA  EB 00		    jmp   game_over
+ 000001D5  0F 8C FFFFFF4C	       jl    show_words
+ 000001DB  EB 00		    jmp   game_over
 
- 000001DC			game_over:
+ 000001DD			game_over:
 				; Displaying game over & exiting program
- 000001DC  BA 00000125 R	    mov    edx, OFFSET space
- 000001E1  E8 00000000 E	    call   WriteString
- 000001E6  E8 00000000 E	    call	 Crlf
- 000001EB  BA 00000125 R	    mov    edx, OFFSET space
- 000001F0  E8 00000000 E	    call   WriteString
- 000001F5  E8 00000000 E	    call	 Crlf
- 000001FA  B8 0000008F		    mov	 eax, white + (gray * 16)
- 000001FF  E8 00000000 E	    call	 SetTextColor
- 00000204  BA 00000030 R	    mov	 edx, OFFSET gameover
- 00000209  E8 00000000 E	    call	 WriteString
- 0000020E  E8 00000000 E	    call	 Crlf
+ 000001DD  BA 00000125 R	    mov    edx, OFFSET space
+ 000001E2  E8 00000000 E	    call   WriteString
+ 000001E7  E8 00000000 E	    call	 Crlf
+ 000001EC  BA 00000125 R	    mov    edx, OFFSET space
+ 000001F1  E8 00000000 E	    call   WriteString
+ 000001F6  E8 00000000 E	    call	 Crlf
+ 000001FB  B8 0000008F		    mov	 eax, white + (gray * 16)
+ 00000200  E8 00000000 E	    call	 SetTextColor
+ 00000205  BA 00000030 R	    mov	 edx, OFFSET gameover
+ 0000020A  E8 00000000 E	    call	 WriteString
+ 0000020F  E8 00000000 E	    call	 Crlf
 				        
 
- 00000213  BA 0000019B R	    mov edx, OFFSET scoreStr
- 00000218  E8 00000000 E	    call     WriteString
- 0000021D  BA 00000197 R	    mov edx, OFFSET score
- 00000222  E8 00000000 E	    call     WriteDec
- 00000227  E8 00000000 E	    call     Crlf
+ 00000214  BA 0000019B R	    mov edx, OFFSET scoreStr
+ 00000219  E8 00000000 E	    call     WriteString
+ 0000021E  A1 00000197 R	    mov eax, score
+ 00000223  E8 00000000 E	    call     WriteDec
+ 00000228  E8 00000000 E	    call     Crlf
 				    exit
- 0000022C  6A 00	   *	    push   +000000000h
- 0000022E  E8 00000000 E   *	    call   ExitProcess
+ 0000022D  6A 00	   *	    push   +000000000h
+ 0000022F  E8 00000000 E   *	    call   ExitProcess
 
- 00000233			main ENDP
+ 00000234			main ENDP
 				END main
 
 
-Microsoft (R) Macro Assembler Version 14.41.34120.0	    03/31/25 18:17:58
+Microsoft (R) Macro Assembler Version 14.41.34120.0	    03/31/25 19:49:53
 color_game.asm						     Symbols 2 - 1
 
 
@@ -418,7 +418,7 @@ Segments and Groups:
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
 _DATA  . . . . . . . . . . . . .	32 Bit	 000001A3 Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 00000233 Para	  Public  'CODE'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000234 Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -525,14 +525,14 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000233 Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000234 Public STDCALL
   wait_start . . . . . . . . . .	L Near	 000000D4 _TEXT	
   start_game . . . . . . . . . .	L Near	 000000DF _TEXT	
   show_words . . . . . . . . . .	L Near	 00000127 _TEXT	
-  compare_loop . . . . . . . . .	L Near	 000001AB _TEXT	
-  strings_match  . . . . . . . .	L Near	 000001BB _TEXT	
-  not_equal  . . . . . . . . . .	L Near	 000001C4 _TEXT	
-  game_over  . . . . . . . . . .	L Near	 000001DC _TEXT	
+  compare_loop . . . . . . . . .	L Near	 000001AC _TEXT	
+  strings_match  . . . . . . . .	L Near	 000001BC _TEXT	
+  not_equal  . . . . . . . . . .	L Near	 000001C5 _TEXT	
+  game_over  . . . . . . . . . .	L Near	 000001DD _TEXT	
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
