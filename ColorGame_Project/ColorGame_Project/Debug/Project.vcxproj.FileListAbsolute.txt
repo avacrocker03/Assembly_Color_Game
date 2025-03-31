@@ -1,2 +1,3 @@
 C:\Users\avacr\Downloads\Project32_VS2022\Project32_VS2022\Debug\Project.exe
 C:\Users\avacr\Assembly_Color_Game\ColorGame_Project\ColorGame_Project\Debug\ColorGame.exe
+C:\Assembly_Color_Game\ColorGame_Project\ColorGame_Project\Debug\ColorGame.exe

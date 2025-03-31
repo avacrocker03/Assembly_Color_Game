@@ -32,6 +32,9 @@ grayText   BYTE "GRAY", 0
 colorText  DWORD OFFSET redText, OFFSET yellowText, OFFSET greenText, OFFSET blueText, OFFSET purpleText, OFFSET blackText, OFFSET whiteText, OFFSET grayText
 colorDisplay  DWORD red, yellow, green, blue, magenta, black, white, lightGray
 
+score      DWORD 0
+scoreStr   BYTE  "Score: ", 0
+
 .code
 main PROC
 ; Setting base background
@@ -159,7 +162,30 @@ start_game:
        mov   ecx, 20
        call  ReadString
 
+       ; COMPARING STRINGS SECTION
+       ;loading strings
+       mov esi, OFFSET currColor  ; Point to first string
+       mov edi, OFFSET userGuess  ; Point to second string
        
+       ;looping through strings
+       compare_loop:
+            mov al, [esi]  ; Load currColor
+            mov bl, [edi]  ; Load from userGuess
+            cmp al, bl
+            jne not_equal  ; not equal -- jumps out of loop here
+    
+            cmp al, 0      ; Check for null terminator
+            je strings_match ; If null terminator reached, strings match
+    
+            inc esi        ; Move to next in currColor
+            inc edi        ; userGuess
+            jmp compare_loop  ;normal loop proc
+
+        strings_match:
+            add score, 1  ; Increment score
+            jmp not_equal
+
+        not_equal: ;not equal -- jumps past inc
 
        ; TODO: have program pause and take user input for guess (ps. set breakpoint to line 199 to have prog continuously run and not have to step)
        ;       compare currColor to the userGuess (i believe you have to compare byte by byte lmk if u want help on this)
@@ -191,7 +217,15 @@ game_over:
     call	 WriteString
     call	 Crlf
         
+
+    mov edx, OFFSET scoreStr
+    call     WriteString
+    mov edx, OFFSET score
+    call     WriteDec
+    call     Crlf
     exit
 
 main ENDP
 END main
+
+

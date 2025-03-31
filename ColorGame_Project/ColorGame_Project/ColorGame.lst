@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.41.34123.0	    03/31/25 14:15:36
+Microsoft (R) Macro Assembler Version 14.41.34120.0	    03/31/25 18:17:58
 color_game.asm						     Page 1 - 1
 
 
@@ -118,6 +118,10 @@ color_game.asm						     Page 1 - 1
 	   00000000
 	   0000000F
 	   00000007
+
+ 00000197 00000000		score      DWORD 0
+ 0000019B 53 63 6F 72 65	scoreStr   BYTE  "Score: ", 0
+	   3A 20 00
 
  00000000			.code
  00000000			main PROC
@@ -249,7 +253,31 @@ color_game.asm						     Page 1 - 1
  00000197  B9 00000014		       mov   ecx, 20
  0000019C  E8 00000000 E	       call  ReadString
 
+				       ; COMPARING STRINGS SECTION
+				       ;loading strings
+ 000001A1  BE 0000000C R	       mov esi, OFFSET currColor  ; Point to first string
+ 000001A6  BF 0000004B R	       mov edi, OFFSET userGuess  ; Point to second string
 				       
+				       ;looping through strings
+ 000001AB			       compare_loop:
+ 000001AB  8A 06		            mov al, [esi]  ; Load currColor
+ 000001AD  8A 1F		            mov bl, [edi]  ; Load from userGuess
+ 000001AF  3A C3		            cmp al, bl
+ 000001B1  75 11		            jne not_equal  ; not equal -- jumps out of loop here
+				    
+ 000001B3  3C 00		            cmp al, 0      ; Check for null terminator
+ 000001B5  74 04		            je strings_match ; If null terminator reached, strings match
+				    
+ 000001B7  46			            inc esi        ; Move to next in currColor
+ 000001B8  47			            inc edi        ; userGuess
+ 000001B9  EB F0		            jmp compare_loop  ;normal loop proc
+
+ 000001BB			        strings_match:
+ 000001BB  83 05 00000197 R	            add score, 1  ; Increment score
+	   01
+ 000001C2  EB 00		            jmp not_equal
+
+ 000001C4			        not_equal: ;not equal -- jumps past inc
 
 				       ; TODO: have program pause and take user input for guess (ps. set breakpoint to line 199 to have prog continuously run and not have to step)
 				       ;       compare currColor to the userGuess (i believe you have to compare byte by byte lmk if u want help on this)
@@ -260,34 +288,42 @@ color_game.asm						     Page 1 - 1
 
 
 				       ; Timer
- 000001A1  E8 00000000 E	       call  GetMseconds
- 000001A6  2B 05 00000000 R	       sub   eax, startTime
- 000001AC  3D 00007530		       cmp   eax, 30000 ; set shorter for testing purposes, change to 60000 for 1 min
+ 000001C4  E8 00000000 E	       call  GetMseconds
+ 000001C9  2B 05 00000000 R	       sub   eax, startTime
+ 000001CF  3D 00007530		       cmp   eax, 30000 ; set shorter for testing purposes, change to 60000 for 1 min
 
- 000001B1  0F 8C FFFFFF70	       jl    show_words
- 000001B7  EB 00		    jmp   game_over
+ 000001D4  0F 8C FFFFFF4D	       jl    show_words
+ 000001DA  EB 00		    jmp   game_over
 
- 000001B9			game_over:
+ 000001DC			game_over:
 				; Displaying game over & exiting program
- 000001B9  BA 00000125 R	    mov    edx, OFFSET space
- 000001BE  E8 00000000 E	    call   WriteString
- 000001C3  E8 00000000 E	    call	 Crlf
- 000001C8  BA 00000125 R	    mov    edx, OFFSET space
- 000001CD  E8 00000000 E	    call   WriteString
- 000001D2  E8 00000000 E	    call	 Crlf
- 000001D7  B8 0000008F		    mov	 eax, white + (gray * 16)
- 000001DC  E8 00000000 E	    call	 SetTextColor
- 000001E1  BA 00000030 R	    mov	 edx, OFFSET gameover
- 000001E6  E8 00000000 E	    call	 WriteString
- 000001EB  E8 00000000 E	    call	 Crlf
+ 000001DC  BA 00000125 R	    mov    edx, OFFSET space
+ 000001E1  E8 00000000 E	    call   WriteString
+ 000001E6  E8 00000000 E	    call	 Crlf
+ 000001EB  BA 00000125 R	    mov    edx, OFFSET space
+ 000001F0  E8 00000000 E	    call   WriteString
+ 000001F5  E8 00000000 E	    call	 Crlf
+ 000001FA  B8 0000008F		    mov	 eax, white + (gray * 16)
+ 000001FF  E8 00000000 E	    call	 SetTextColor
+ 00000204  BA 00000030 R	    mov	 edx, OFFSET gameover
+ 00000209  E8 00000000 E	    call	 WriteString
+ 0000020E  E8 00000000 E	    call	 Crlf
 				        
-				    exit
- 000001F0  6A 00	   *	    push   +000000000h
- 000001F2  E8 00000000 E   *	    call   ExitProcess
 
- 000001F7			main ENDP
+ 00000213  BA 0000019B R	    mov edx, OFFSET scoreStr
+ 00000218  E8 00000000 E	    call     WriteString
+ 0000021D  BA 00000197 R	    mov edx, OFFSET score
+ 00000222  E8 00000000 E	    call     WriteDec
+ 00000227  E8 00000000 E	    call     Crlf
+				    exit
+ 0000022C  6A 00	   *	    push   +000000000h
+ 0000022E  E8 00000000 E   *	    call   ExitProcess
+
+ 00000233			main ENDP
 				END main
-Microsoft (R) Macro Assembler Version 14.41.34123.0	    03/31/25 14:15:36
+
+
+Microsoft (R) Macro Assembler Version 14.41.34120.0	    03/31/25 18:17:58
 color_game.asm						     Symbols 2 - 1
 
 
@@ -381,8 +417,8 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 00000197 Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 000001F7 Para	  Public  'CODE'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 000001A3 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000233 Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -489,11 +525,14 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000001F7 Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000233 Public STDCALL
   wait_start . . . . . . . . . .	L Near	 000000D4 _TEXT	
   start_game . . . . . . . . . .	L Near	 000000DF _TEXT	
   show_words . . . . . . . . . .	L Near	 00000127 _TEXT	
-  game_over  . . . . . . . . . .	L Near	 000001B9 _TEXT	
+  compare_loop . . . . . . . . .	L Near	 000001AB _TEXT	
+  strings_match  . . . . . . . .	L Near	 000001BB _TEXT	
+  not_equal  . . . . . . . . . .	L Near	 000001C4 _TEXT	
+  game_over  . . . . . . . . . .	L Near	 000001DC _TEXT	
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
@@ -749,6 +788,8 @@ redText  . . . . . . . . . . . .	Byte	 00000129 _DATA
 red  . . . . . . . . . . . . . .	Number	 00000004h   
 return . . . . . . . . . . . . .	Byte	 00000127 _DATA	
 rules  . . . . . . . . . . . . .	Byte	 00000060 _DATA	
+scoreStr . . . . . . . . . . . .	Byte	 0000019B _DATA	
+score  . . . . . . . . . . . . .	DWord	 00000197 _DATA	
 space  . . . . . . . . . . . . .	Byte	 00000125 _DATA	
 startTime  . . . . . . . . . . .	DWord	 00000000 _DATA	
 start  . . . . . . . . . . . . .	Byte	 00000114 _DATA	
