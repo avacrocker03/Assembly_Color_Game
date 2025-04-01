@@ -87,16 +87,17 @@ main PROC
 wait_start:
 ; Checking if user inputs space to start game
 
-    call  ReadChar
+    call  ReadChar   ; reading user input
 
-    cmp   al, 20h
+    cmp   al, 20h   ; checking if space
     je    start_game
 
-    jmp   wait_start
+    jmp   wait_start   ; loops until user hits space
 
 start_game:
 ; Starting game
 
+    ; Displaying start game text
     mov    edx, OFFSET space
     call   WriteString
     call	 Crlf
@@ -111,7 +112,7 @@ start_game:
 
     ; Starting 1 min timer
     call   GetMseconds
-    mov    startTime, eax
+    mov    startTime, eax   ; saving inital time
 
     ; Initialize random number
     call Randomize
@@ -121,46 +122,41 @@ start_game:
     show_words:
     ; Displaying colors
 
-       mov    edx, OFFSET return
-       call   WriteString
-
        ; Random color
-       mov    eax, 8
+       mov    eax, 8   ; allowing generation of 0-7
        call   RandomRange
-       mov    ebx, eax
+       mov    ebx, eax   ; loading random number
 
        ; Getting color from array
-       mov    eax, [colorDisplay + ebx*4]
-       mov    edx, gray
-       shl    edx, 4
-       add    eax, edx
+       mov    eax, [colorDisplay + ebx*4]   ; loading random color
+       mov    edx, gray  ; loading background color gray
+       shl    edx, 4   ; computing (gray * 16)
+       add    eax, edx  ; computing color + (gray * 16)
        call   SetTextColor
 
        ; Saving current color text for later comparison
-       mov    eax, [colorText + ebx*4]
-       mov    currColor, eax
+       mov    eax, [colorText + ebx*4]  ; loading same random index into colorText
+       mov    currColor, eax   ; saving text as current color
 
 
        ; Random Text
-       mov   eax, 8
+       mov   eax, 8  ; allowing generation of 0-7
        call   RandomRange
-       mov    ebx, eax
+       mov    ebx, eax  ; loading random number
 
        ; Getting color text from array
-       mov    eax, [colorText + ebx*4]
-       mov    edx, eax
-       mov    currWord, eax
+       mov    edx, [colorText + ebx*4]   ; loading random color text
        call   WriteString
 
        ; Getting user input
        mov   eax, white + (gray * 16)
        call  SetTextColor
-       mov   edx, OFFSET guessText
+       mov   edx, OFFSET guessText   ; writing guess text prompt
        call  WriteString
 
-       mov   edx, OFFSET userGuess
-       mov   ecx, 20
-       call  ReadString
+       mov   edx, OFFSET userGuess   ; loading userGuess
+       mov   ecx, 20    ; max of 20 chars for input
+       call  ReadString    ; reading input
 
        ; COMPARING STRINGS SECTION
        ;loading strings
@@ -187,18 +183,10 @@ start_game:
 
         not_equal: ;not equal -- jumps past inc
 
-       ; TODO: have program pause and take user input for guess (ps. set breakpoint to line 199 to have prog continuously run and not have to step)
-       ;       compare currColor to the userGuess (i believe you have to compare byte by byte lmk if u want help on this)
-       ;       make two loops, right and wrong, jump to whichever based off guess
-       ;       add score 1 to score if right
-       ;       display score once timer runs out
-       ;       can also display time if you want
-
-
        ; Timer
-       call  GetMseconds
-       sub   eax, startTime
-       cmp   eax, 30000 ; set shorter for testing purposes, change to 60000 for 1 min
+       call  GetMseconds ; getting ms
+       sub   eax, startTime ; subtracting to get elapsed time
+       cmp   eax, 30000 ; 30 second timer
 
        jl    show_words
     jmp   game_over

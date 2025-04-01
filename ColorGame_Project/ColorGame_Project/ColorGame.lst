@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.41.34120.0	    03/31/25 19:49:53
+Microsoft (R) Macro Assembler Version 14.41.34123.0	    03/31/25 20:13:59
 color_game.asm						     Page 1 - 1
 
 
@@ -175,16 +175,17 @@ color_game.asm						     Page 1 - 1
  000000D4			wait_start:
 				; Checking if user inputs space to start game
 
- 000000D4  E8 00000000 E	    call  ReadChar
+ 000000D4  E8 00000000 E	    call  ReadChar   ; reading user input
 
- 000000D9  3C 20		    cmp   al, 20h
+ 000000D9  3C 20		    cmp   al, 20h   ; checking if space
  000000DB  74 02		    je    start_game
 
- 000000DD  EB F5		    jmp   wait_start
+ 000000DD  EB F5		    jmp   wait_start   ; loops until user hits space
 
  000000DF			start_game:
 				; Starting game
 
+				    ; Displaying start game text
  000000DF  BA 00000125 R	    mov    edx, OFFSET space
  000000E4  E8 00000000 E	    call   WriteString
  000000E9  E8 00000000 E	    call	 Crlf
@@ -199,7 +200,7 @@ color_game.asm						     Page 1 - 1
 
 				    ; Starting 1 min timer
  00000116  E8 00000000 E	    call   GetMseconds
- 0000011B  A3 00000000 R	    mov    startTime, eax
+ 0000011B  A3 00000000 R	    mov    startTime, eax   ; saving inital time
 
 				    ; Initialize random number
  00000120  E8 00000000 E	    call Randomize
@@ -209,121 +210,108 @@ color_game.asm						     Page 1 - 1
  00000127			    show_words:
 				    ; Displaying colors
 
- 00000127  BA 00000127 R	       mov    edx, OFFSET return
- 0000012C  E8 00000000 E	       call   WriteString
-
 				       ; Random color
- 00000131  B8 00000008		       mov    eax, 8
- 00000136  E8 00000000 E	       call   RandomRange
- 0000013B  8B D8		       mov    ebx, eax
+ 00000127  B8 00000008		       mov    eax, 8   ; allowing generation of 0-7
+ 0000012C  E8 00000000 E	       call   RandomRange
+ 00000131  8B D8		       mov    ebx, eax   ; loading random number
 
 				       ; Getting color from array
- 0000013D  8B 04 9D		       mov    eax, [colorDisplay + ebx*4]
+ 00000133  8B 04 9D		       mov    eax, [colorDisplay + ebx*4]   ; loading random color
 	   00000177 R
- 00000144  BA 00000008		       mov    edx, gray
- 00000149  C1 E2 04		       shl    edx, 4
- 0000014C  03 C2		       add    eax, edx
- 0000014E  E8 00000000 E	       call   SetTextColor
+ 0000013A  BA 00000008		       mov    edx, gray  ; loading background color gray
+ 0000013F  C1 E2 04		       shl    edx, 4   ; computing (gray * 16)
+ 00000142  03 C2		       add    eax, edx  ; computing color + (gray * 16)
+ 00000144  E8 00000000 E	       call   SetTextColor
 
 				       ; Saving current color text for later comparison
- 00000153  8B 04 9D		       mov    eax, [colorText + ebx*4]
+ 00000149  8B 04 9D		       mov    eax, [colorText + ebx*4]  ; loading same random index into colorText
 	   00000157 R
- 0000015A  A3 0000000C R	       mov    currColor, eax
+ 00000150  A3 0000000C R	       mov    currColor, eax   ; saving text as current color
 
 
 				       ; Random Text
- 0000015F  B8 00000008		       mov   eax, 8
- 00000164  E8 00000000 E	       call   RandomRange
- 00000169  8B D8		       mov    ebx, eax
+ 00000155  B8 00000008		       mov   eax, 8  ; allowing generation of 0-7
+ 0000015A  E8 00000000 E	       call   RandomRange
+ 0000015F  8B D8		       mov    ebx, eax  ; loading random number
 
 				       ; Getting color text from array
- 0000016B  8B 04 9D		       mov    eax, [colorText + ebx*4]
+ 00000161  8B 14 9D		       mov    edx, [colorText + ebx*4]   ; loading random color text
 	   00000157 R
- 00000172  8B D0		       mov    edx, eax
- 00000174  A3 00000008 R	       mov    currWord, eax
- 00000179  E8 00000000 E	       call   WriteString
+ 00000168  E8 00000000 E	       call   WriteString
 
 				       ; Getting user input
- 0000017E  B8 0000008F		       mov   eax, white + (gray * 16)
- 00000183  E8 00000000 E	       call  SetTextColor
- 00000188  BA 0000003B R	       mov   edx, OFFSET guessText
- 0000018D  E8 00000000 E	       call  WriteString
+ 0000016D  B8 0000008F		       mov   eax, white + (gray * 16)
+ 00000172  E8 00000000 E	       call  SetTextColor
+ 00000177  BA 0000003B R	       mov   edx, OFFSET guessText   ; writing guess text prompt
+ 0000017C  E8 00000000 E	       call  WriteString
 
- 00000192  BA 0000004B R	       mov   edx, OFFSET userGuess
- 00000197  B9 00000014		       mov   ecx, 20
- 0000019C  E8 00000000 E	       call  ReadString
+ 00000181  BA 0000004B R	       mov   edx, OFFSET userGuess   ; loading userGuess
+ 00000186  B9 00000014		       mov   ecx, 20    ; max of 20 chars for input
+ 0000018B  E8 00000000 E	       call  ReadString    ; reading input
 
 				       ; COMPARING STRINGS SECTION
 				       ;loading strings
- 000001A1  8B 35 0000000C R	       mov esi, [currColor]  ; Point to first string
- 000001A7  BF 0000004B R	       mov edi, OFFSET userGuess  ; Point to second string
+ 00000190  8B 35 0000000C R	       mov esi, [currColor]  ; Point to first string
+ 00000196  BF 0000004B R	       mov edi, OFFSET userGuess  ; Point to second string
 				       
 				       ;looping through strings
- 000001AC			       compare_loop:
- 000001AC  8A 06		            mov al, [esi]  ; Load currColor
- 000001AE  8A 1F		            mov bl, [edi]  ; Load from userGuess
- 000001B0  3A C3		            cmp al, bl
- 000001B2  75 11		            jne not_equal  ; not equal -- jumps out of loop here
+ 0000019B			       compare_loop:
+ 0000019B  8A 06		            mov al, [esi]  ; Load currColor
+ 0000019D  8A 1F		            mov bl, [edi]  ; Load from userGuess
+ 0000019F  3A C3		            cmp al, bl
+ 000001A1  75 11		            jne not_equal  ; not equal -- jumps out of loop here
 				    
- 000001B4  3C 00		            cmp al, 0      ; Check for null terminator
- 000001B6  74 04		            je strings_match ; If null terminator reached, strings match
+ 000001A3  3C 00		            cmp al, 0      ; Check for null terminator
+ 000001A5  74 04		            je strings_match ; If null terminator reached, strings match
 				    
- 000001B8  46			            inc esi        ; Move to next in currColor
- 000001B9  47			            inc edi        ; userGuess
- 000001BA  EB F0		            jmp compare_loop  ;normal loop proc
+ 000001A7  46			            inc esi        ; Move to next in currColor
+ 000001A8  47			            inc edi        ; userGuess
+ 000001A9  EB F0		            jmp compare_loop  ;normal loop proc
 
- 000001BC			        strings_match:
- 000001BC  83 05 00000197 R	            add score, 1  ; Increment score
+ 000001AB			        strings_match:
+ 000001AB  83 05 00000197 R	            add score, 1  ; Increment score
 	   01
- 000001C3  EB 00		            jmp not_equal
+ 000001B2  EB 00		            jmp not_equal
 
- 000001C5			        not_equal: ;not equal -- jumps past inc
-
-				       ; TODO: have program pause and take user input for guess (ps. set breakpoint to line 199 to have prog continuously run and not have to step)
-				       ;       compare currColor to the userGuess (i believe you have to compare byte by byte lmk if u want help on this)
-				       ;       make two loops, right and wrong, jump to whichever based off guess
-				       ;       add score 1 to score if right
-				       ;       display score once timer runs out
-				       ;       can also display time if you want
-
+ 000001B4			        not_equal: ;not equal -- jumps past inc
 
 				       ; Timer
- 000001C5  E8 00000000 E	       call  GetMseconds
- 000001CA  2B 05 00000000 R	       sub   eax, startTime
- 000001D0  3D 00007530		       cmp   eax, 30000 ; set shorter for testing purposes, change to 60000 for 1 min
+ 000001B4  E8 00000000 E	       call  GetMseconds ; getting ms
+ 000001B9  2B 05 00000000 R	       sub   eax, startTime ; subtracting to get elapsed time
+ 000001BF  3D 00007530		       cmp   eax, 30000 ; 30 second timer
 
- 000001D5  0F 8C FFFFFF4C	       jl    show_words
- 000001DB  EB 00		    jmp   game_over
+ 000001C4  0F 8C FFFFFF5D	       jl    show_words
+ 000001CA  EB 00		    jmp   game_over
 
- 000001DD			game_over:
+ 000001CC			game_over:
 				; Displaying game over & exiting program
- 000001DD  BA 00000125 R	    mov    edx, OFFSET space
- 000001E2  E8 00000000 E	    call   WriteString
- 000001E7  E8 00000000 E	    call	 Crlf
- 000001EC  BA 00000125 R	    mov    edx, OFFSET space
- 000001F1  E8 00000000 E	    call   WriteString
- 000001F6  E8 00000000 E	    call	 Crlf
- 000001FB  B8 0000008F		    mov	 eax, white + (gray * 16)
- 00000200  E8 00000000 E	    call	 SetTextColor
- 00000205  BA 00000030 R	    mov	 edx, OFFSET gameover
- 0000020A  E8 00000000 E	    call	 WriteString
- 0000020F  E8 00000000 E	    call	 Crlf
+ 000001CC  BA 00000125 R	    mov    edx, OFFSET space
+ 000001D1  E8 00000000 E	    call   WriteString
+ 000001D6  E8 00000000 E	    call	 Crlf
+ 000001DB  BA 00000125 R	    mov    edx, OFFSET space
+ 000001E0  E8 00000000 E	    call   WriteString
+ 000001E5  E8 00000000 E	    call	 Crlf
+ 000001EA  B8 0000008F		    mov	 eax, white + (gray * 16)
+ 000001EF  E8 00000000 E	    call	 SetTextColor
+ 000001F4  BA 00000030 R	    mov	 edx, OFFSET gameover
+ 000001F9  E8 00000000 E	    call	 WriteString
+ 000001FE  E8 00000000 E	    call	 Crlf
 				        
 
- 00000214  BA 0000019B R	    mov edx, OFFSET scoreStr
- 00000219  E8 00000000 E	    call     WriteString
- 0000021E  A1 00000197 R	    mov eax, score
- 00000223  E8 00000000 E	    call     WriteDec
- 00000228  E8 00000000 E	    call     Crlf
+ 00000203  BA 0000019B R	    mov edx, OFFSET scoreStr
+ 00000208  E8 00000000 E	    call     WriteString
+ 0000020D  A1 00000197 R	    mov eax, score
+ 00000212  E8 00000000 E	    call     WriteDec
+ 00000217  E8 00000000 E	    call     Crlf
 				    exit
- 0000022D  6A 00	   *	    push   +000000000h
- 0000022F  E8 00000000 E   *	    call   ExitProcess
+ 0000021C  6A 00	   *	    push   +000000000h
+ 0000021E  E8 00000000 E   *	    call   ExitProcess
 
- 00000234			main ENDP
+ 00000223			main ENDP
 				END main
 
 
-Microsoft (R) Macro Assembler Version 14.41.34120.0	    03/31/25 19:49:53
+Microsoft (R) Macro Assembler Version 14.41.34123.0	    03/31/25 20:13:59
 color_game.asm						     Symbols 2 - 1
 
 
@@ -418,7 +406,7 @@ Segments and Groups:
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
 _DATA  . . . . . . . . . . . . .	32 Bit	 000001A3 Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 00000234 Para	  Public  'CODE'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000223 Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -525,14 +513,14 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000234 Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000223 Public STDCALL
   wait_start . . . . . . . . . .	L Near	 000000D4 _TEXT	
   start_game . . . . . . . . . .	L Near	 000000DF _TEXT	
   show_words . . . . . . . . . .	L Near	 00000127 _TEXT	
-  compare_loop . . . . . . . . .	L Near	 000001AC _TEXT	
-  strings_match  . . . . . . . .	L Near	 000001BC _TEXT	
-  not_equal  . . . . . . . . . .	L Near	 000001C5 _TEXT	
-  game_over  . . . . . . . . . .	L Near	 000001DD _TEXT	
+  compare_loop . . . . . . . . .	L Near	 0000019B _TEXT	
+  strings_match  . . . . . . . .	L Near	 000001AB _TEXT	
+  not_equal  . . . . . . . . . .	L Near	 000001B4 _TEXT	
+  game_over  . . . . . . . . . .	L Near	 000001CC _TEXT	
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
