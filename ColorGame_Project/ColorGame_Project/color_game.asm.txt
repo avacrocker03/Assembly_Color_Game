@@ -7,7 +7,6 @@ startTime  DWORD 0
 currTime   DWORD 0
 currWord   DWORD 0
 currColor  DWORD 0
-currColorL DWORD 0
 game1	 BYTE "WELCOME ", 0
 game2	 BYTE "TO ",0
 game3	 BYTE "THE ",0
@@ -16,7 +15,6 @@ game5	 BYTE "GAME",0
 game6	 BYTE "!",0
 gameover   BYTE "GAME OVER!", 0
 guessText  BYTE "        Guess: ", 0
-scoreText  BYTE " out of ", 0
 userGuess  BYTE 20 DUP(" "), 0
 rules	 BYTE "Guess the COLOR of the text before the timer runs out! Press SPACE to start playing...", 0
 border	 BYTE "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",0
@@ -30,19 +28,11 @@ blueText   BYTE "BLUE", 0
 purpleText BYTE "PURPLE", 0
 blackText  BYTE "BLACK", 0
 whiteText  BYTE "WHITE", 0
-redTextL    BYTE "red", 0
-yellowTextL BYTE "yellow", 0
-greenTextL  BYTE "green", 0
-blueTextL   BYTE "blue", 0
-purpleTextL BYTE "purple", 0
-blackTextL  BYTE "black", 0
-whiteTextL  BYTE "white", 0
-colorText  DWORD OFFSET redText, OFFSET yellowText, OFFSET greenText, OFFSET blueText, OFFSET purpleText, OFFSET blackText, OFFSET whiteText
-colorTextLower  DWORD OFFSET redTextL, OFFSET yellowTextL, OFFSET greenTextL, OFFSET blueTextL, OFFSET purpleTextL, OFFSET blackTextL, OFFSET whiteTextL
-colorDisplay  DWORD red, yellow, green, blue, magenta, black, white
+grayText   BYTE "GRAY", 0
+colorText  DWORD OFFSET redText, OFFSET yellowText, OFFSET greenText, OFFSET blueText, OFFSET purpleText, OFFSET blackText, OFFSET whiteText, OFFSET grayText
+colorDisplay  DWORD red, yellow, green, blue, magenta, black, white, lightGray
 
 score      DWORD 0
-total      DWORD 0
 scoreStr   BYTE  "Score: ", 0
 
 .code
@@ -132,10 +122,8 @@ start_game:
     show_words:
     ; Displaying colors
 
-       ; Updating word counter
-       add    total, 1
        ; Random color
-       mov    eax, 7   ; allowing generation of 0-6
+       mov    eax, 8   ; allowing generation of 0-7
        call   RandomRange
        mov    ebx, eax   ; loading random number
 
@@ -150,13 +138,9 @@ start_game:
        mov    eax, [colorText + ebx*4]  ; loading same random index into colorText
        mov    currColor, eax   ; saving text as current color
 
-       ; Saving lowercase color test for later comparison
-       mov    eax, [colorTextLower + ebx*4]  ; loading same random index into colorText
-       mov    currColorL, eax   ; saving text as current color
-
 
        ; Random Text
-       mov   eax, 7  ; allowing generation of 0-6
+       mov   eax, 8  ; allowing generation of 0-7
        call   RandomRange
        mov    ebx, eax  ; loading random number
 
@@ -184,36 +168,18 @@ start_game:
             mov al, [esi]  ; Load currColor
             mov bl, [edi]  ; Load from userGuess
             cmp al, bl
-            jne case_check     ; not equal -- jumps out of loop here
+            jne not_equal  ; not equal -- jumps out of loop here
     
-            cmp al, 0          ; Check for null terminator
-            je strings_match   ; If null terminator reached, strings match
+            cmp al, 0      ; Check for null terminator
+            je strings_match ; If null terminator reached, strings match
     
-            inc esi            ; Move to next in currColor
-            inc edi            ; userGuess
-            jmp compare_loop   ;normal loop proc
+            inc esi        ; Move to next in currColor
+            inc edi        ; userGuess
+            jmp compare_loop  ;normal loop proc
 
         strings_match:
-            add score, 1       ; Increment score
+            add score, 1  ; Increment score
             jmp not_equal
-
-        case_check:                    ; Doing second round of checks in case input is lowercase
-            mov esi, [currColorL]       ; Point to first string
-            mov edi, OFFSET userGuess  ; Point to second string
-            jmp compare_loop2
-
-        compare_loop2:
-            mov al, [esi]      ; Load currColor
-            mov bl, [edi]      ; Load from userGuess
-            cmp al, bl
-            jne not_equal      ; not equal -- jumps out of loop here
-    
-            cmp al, 0          ; Check for null terminator
-            je strings_match   ; If null terminator reached, strings match
-    
-            inc esi            ; Move to next in currColor
-            inc edi            ; userGuess
-            jmp compare_loop2  ;normal loop proc
 
         not_equal: ;not equal -- jumps past inc
 
@@ -244,10 +210,7 @@ game_over:
     call     WriteString
     mov eax, score
     call     WriteDec
-    mov edx, OFFSET scoreText
-    call     WriteString
-    mov eax, total
-    call     WriteDec
+    call     Crlf
     exit
 
 main ENDP

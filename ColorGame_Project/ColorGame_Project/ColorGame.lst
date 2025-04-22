@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.41.34123.0	    03/31/25 20:13:59
+Microsoft (R) Macro Assembler Version 14.41.34123.0	    04/22/25 14:33:50
 color_game.asm						     Page 1 - 1
 
 
@@ -28,25 +28,28 @@ color_game.asm						     Page 1 - 1
  00000004 00000000		currTime   DWORD 0
  00000008 00000000		currWord   DWORD 0
  0000000C 00000000		currColor  DWORD 0
- 00000010 57 45 4C 43 4F	game1	 BYTE "WELCOME ", 0
+ 00000010 00000000		currColorL DWORD 0
+ 00000014 57 45 4C 43 4F	game1	 BYTE "WELCOME ", 0
 	   4D 45 20 00
- 00000019 54 4F 20 00		game2	 BYTE "TO ",0
- 0000001D 54 48 45 20 00	game3	 BYTE "THE ",0
- 00000022 43 4F 4C 4F 52	game4	 BYTE "COLOR ",0
+ 0000001D 54 4F 20 00		game2	 BYTE "TO ",0
+ 00000021 54 48 45 20 00	game3	 BYTE "THE ",0
+ 00000026 43 4F 4C 4F 52	game4	 BYTE "COLOR ",0
 	   20 00
- 00000029 47 41 4D 45 00	game5	 BYTE "GAME",0
- 0000002E 21 00			game6	 BYTE "!",0
- 00000030 47 41 4D 45 20	gameover   BYTE "GAME OVER!", 0
+ 0000002D 47 41 4D 45 00	game5	 BYTE "GAME",0
+ 00000032 21 00			game6	 BYTE "!",0
+ 00000034 47 41 4D 45 20	gameover   BYTE "GAME OVER!", 0
 	   4F 56 45 52 21
 	   00
- 0000003B 20 20 20 20 20	guessText  BYTE "        Guess: ", 0
+ 0000003F 20 20 20 20 20	guessText  BYTE "        Guess: ", 0
 	   20 20 20 47 75
 	   65 73 73 3A 20
 	   00
- 0000004B  00000014 [		userGuess  BYTE 20 DUP(" "), 0
+ 0000004F 20 6F 75 74 20	scoreText  BYTE " out of ", 0
+	   6F 66 20 00
+ 00000058  00000014 [		userGuess  BYTE 20 DUP(" "), 0
 	    20
 	   ] 00
- 00000060 47 75 65 73 73	rules	 BYTE "Guess the COLOR of the text before the timer runs out! Press SPACE to start playing...", 0
+ 0000006D 47 75 65 73 73	rules	 BYTE "Guess the COLOR of the text before the timer runs out! Press SPACE to start playing...", 0
 	   20 74 68 65 20
 	   43 4F 4C 4F 52
 	   20 6F 66 20 74
@@ -64,7 +67,7 @@ color_game.asm						     Page 1 - 1
 	   20 70 6C 61 79
 	   69 6E 67 2E 2E
 	   2E 00
- 000000B7 7E 7E 7E 7E 7E	border	 BYTE "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",0
+ 000000C4 7E 7E 7E 7E 7E	border	 BYTE "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",0
 	   7E 7E 7E 7E 7E
 	   7E 7E 7E 7E 7E
 	   7E 7E 7E 7E 7E
@@ -83,44 +86,61 @@ color_game.asm						     Page 1 - 1
 	   7E 7E 7E 7E 7E
 	   7E 7E 7E 7E 7E
 	   7E 7E 00
- 00000114 53 54 41 52 54	start      BYTE "STARTING GAME...", 0
+ 00000121 53 54 41 52 54	start      BYTE "STARTING GAME...", 0
 	   49 4E 47 20 47
 	   41 4D 45 2E 2E
 	   2E 00
- 00000125 20 00			space      BYTE " ",0
- 00000127 0D 00			return     BYTE 13, 0
- 00000129 52 45 44 00		redText    BYTE "RED", 0
- 0000012D 59 45 4C 4C 4F	yellowText BYTE "YELLOW", 0
+ 00000132 20 00			space      BYTE " ",0
+ 00000134 0D 00			return     BYTE 13, 0
+ 00000136 52 45 44 00		redText    BYTE "RED", 0
+ 0000013A 59 45 4C 4C 4F	yellowText BYTE "YELLOW", 0
 	   57 00
- 00000134 47 52 45 45 4E	greenText  BYTE "GREEN", 0
+ 00000141 47 52 45 45 4E	greenText  BYTE "GREEN", 0
 	   00
- 0000013A 42 4C 55 45 00	blueText   BYTE "BLUE", 0
- 0000013F 50 55 52 50 4C	purpleText BYTE "PURPLE", 0
+ 00000147 42 4C 55 45 00	blueText   BYTE "BLUE", 0
+ 0000014C 50 55 52 50 4C	purpleText BYTE "PURPLE", 0
 	   45 00
- 00000146 42 4C 41 43 4B	blackText  BYTE "BLACK", 0
+ 00000153 42 4C 41 43 4B	blackText  BYTE "BLACK", 0
 	   00
- 0000014C 57 48 49 54 45	whiteText  BYTE "WHITE", 0
+ 00000159 57 48 49 54 45	whiteText  BYTE "WHITE", 0
 	   00
- 00000152 47 52 41 59 00	grayText   BYTE "GRAY", 0
- 00000157 00000129 R		colorText  DWORD OFFSET redText, OFFSET yellowText, OFFSET greenText, OFFSET blueText, OFFSET purpleText, OFFSET blackText, OFFSET whiteText, OFFSET grayText
-	   0000012D R
-	   00000134 R
+ 0000015F 72 65 64 00		redTextL    BYTE "red", 0
+ 00000163 79 65 6C 6C 6F	yellowTextL BYTE "yellow", 0
+	   77 00
+ 0000016A 67 72 65 65 6E	greenTextL  BYTE "green", 0
+	   00
+ 00000170 62 6C 75 65 00	blueTextL   BYTE "blue", 0
+ 00000175 70 75 72 70 6C	purpleTextL BYTE "purple", 0
+	   65 00
+ 0000017C 62 6C 61 63 6B	blackTextL  BYTE "black", 0
+	   00
+ 00000182 77 68 69 74 65	whiteTextL  BYTE "white", 0
+	   00
+ 00000188 00000136 R		colorText  DWORD OFFSET redText, OFFSET yellowText, OFFSET greenText, OFFSET blueText, OFFSET purpleText, OFFSET blackText, OFFSET whiteText
 	   0000013A R
-	   0000013F R
-	   00000146 R
+	   00000141 R
+	   00000147 R
 	   0000014C R
-	   00000152 R
- 00000177 00000004		colorDisplay  DWORD red, yellow, green, blue, magenta, black, white, lightGray
+	   00000153 R
+	   00000159 R
+ 000001A4 0000015F R		colorTextLower  DWORD OFFSET redTextL, OFFSET yellowTextL, OFFSET greenTextL, OFFSET blueTextL, OFFSET purpleTextL, OFFSET blackTextL, OFFSET whiteTextL
+	   00000163 R
+	   0000016A R
+	   00000170 R
+	   00000175 R
+	   0000017C R
+	   00000182 R
+ 000001C0 00000004		colorDisplay  DWORD red, yellow, green, blue, magenta, black, white
 	   0000000E
 	   00000002
 	   00000001
 	   00000005
 	   00000000
 	   0000000F
-	   00000007
 
- 00000197 00000000		score      DWORD 0
- 0000019B 53 63 6F 72 65	scoreStr   BYTE  "Score: ", 0
+ 000001DC 00000000		score      DWORD 0
+ 000001E0 00000000		total      DWORD 0
+ 000001E4 53 63 6F 72 65	scoreStr   BYTE  "Score: ", 0
 	   3A 20 00
 
  00000000			.code
@@ -132,42 +152,42 @@ color_game.asm						     Page 1 - 1
  0000000F  E8 00000000 E	    call    Crlf                ; new line
 
 				; Setting up intro screen
- 00000014  BA 000000B7 R	    mov	 edx, OFFSET border
+ 00000014  BA 000000C4 R	    mov	 edx, OFFSET border
  00000019  E8 00000000 E	    call	 WriteString
  0000001E  E8 00000000 E	    call	 Crlf
  00000023  B8 00000084		    mov    eax,red + (gray * 16)
  00000028  E8 00000000 E	    call   SetTextColor
- 0000002D  BA 00000010 R	    mov    edx,OFFSET game1
+ 0000002D  BA 00000014 R	    mov    edx,OFFSET game1
  00000032  E8 00000000 E	    call   WriteString
  00000037  B8 0000008C		    mov	 eax, lightRed + (gray * 16)
  0000003C  E8 00000000 E	    call	 SetTextColor
- 00000041  BA 00000019 R	    mov    edx,OFFSET game2
+ 00000041  BA 0000001D R	    mov    edx,OFFSET game2
  00000046  E8 00000000 E	    call   WriteString
  0000004B  B8 0000008E		    mov	 eax, yellow + (gray * 16)
  00000050  E8 00000000 E	    call	 SetTextColor
- 00000055  BA 0000001D R	    mov    edx,OFFSET game3
+ 00000055  BA 00000021 R	    mov    edx,OFFSET game3
  0000005A  E8 00000000 E	    call   WriteString
  0000005F  B8 00000082		    mov	 eax, green + (gray * 16)
  00000064  E8 00000000 E	    call	 SetTextColor
- 00000069  BA 00000022 R	    mov    edx,OFFSET game4
+ 00000069  BA 00000026 R	    mov    edx,OFFSET game4
  0000006E  E8 00000000 E	    call   WriteString
  00000073  B8 00000081		    mov	 eax, blue + (gray * 16)
  00000078  E8 00000000 E	    call	 SetTextColor
- 0000007D  BA 00000029 R	    mov    edx,OFFSET game5
+ 0000007D  BA 0000002D R	    mov    edx,OFFSET game5
  00000082  E8 00000000 E	    call   WriteString
  00000087  B8 00000085		    mov	 eax, magenta + (gray * 16)
  0000008C  E8 00000000 E	    call	 SetTextColor
- 00000091  BA 0000002E R	    mov    edx,OFFSET game6
+ 00000091  BA 00000032 R	    mov    edx,OFFSET game6
  00000096  E8 00000000 E	    call   WriteString
  0000009B  E8 00000000 E	    call	 Crlf
  000000A0  B8 0000008B		    mov	 eax, lightCyan + (gray * 16)
  000000A5  E8 00000000 E	    call	 SetTextColor
- 000000AA  BA 00000060 R	    mov	 edx, OFFSET rules
+ 000000AA  BA 0000006D R	    mov	 edx, OFFSET rules
  000000AF  E8 00000000 E	    call	 WriteString
  000000B4  E8 00000000 E	    call   Crlf
  000000B9  B8 0000008D		    mov	 eax, lightMagenta + (gray * 16)
  000000BE  E8 00000000 E	    call	 SetTextColor
- 000000C3  BA 000000B7 R	    mov	 edx, OFFSET border
+ 000000C3  BA 000000C4 R	    mov	 edx, OFFSET border
  000000C8  E8 00000000 E	    call	 WriteString
  000000CD  E8 00000000 E	    call	 Crlf
  000000D2  EB 00		    jmp    wait_start
@@ -186,15 +206,15 @@ color_game.asm						     Page 1 - 1
 				; Starting game
 
 				    ; Displaying start game text
- 000000DF  BA 00000125 R	    mov    edx, OFFSET space
+ 000000DF  BA 00000132 R	    mov    edx, OFFSET space
  000000E4  E8 00000000 E	    call   WriteString
  000000E9  E8 00000000 E	    call	 Crlf
  000000EE  B8 0000008F		    mov	 eax, white + (gray * 16)
  000000F3  E8 00000000 E	    call	 SetTextColor
- 000000F8  BA 00000114 R	    mov	 edx, OFFSET start
+ 000000F8  BA 00000121 R	    mov	 edx, OFFSET start
  000000FD  E8 00000000 E	    call	 WriteString
  00000102  E8 00000000 E	    call	 Crlf
- 00000107  BA 00000125 R	    mov    edx, OFFSET space
+ 00000107  BA 00000132 R	    mov    edx, OFFSET space
  0000010C  E8 00000000 E	    call   WriteString
  00000111  E8 00000000 E	    call	 Crlf
 
@@ -210,108 +230,137 @@ color_game.asm						     Page 1 - 1
  00000127			    show_words:
 				    ; Displaying colors
 
+				       ; Updating word counter
+ 00000127  83 05 000001E0 R	       add    total, 1
+	   01
 				       ; Random color
- 00000127  B8 00000008		       mov    eax, 8   ; allowing generation of 0-7
- 0000012C  E8 00000000 E	       call   RandomRange
- 00000131  8B D8		       mov    ebx, eax   ; loading random number
+ 0000012E  B8 00000007		       mov    eax, 7   ; allowing generation of 0-6
+ 00000133  E8 00000000 E	       call   RandomRange
+ 00000138  8B D8		       mov    ebx, eax   ; loading random number
 
 				       ; Getting color from array
- 00000133  8B 04 9D		       mov    eax, [colorDisplay + ebx*4]   ; loading random color
-	   00000177 R
- 0000013A  BA 00000008		       mov    edx, gray  ; loading background color gray
- 0000013F  C1 E2 04		       shl    edx, 4   ; computing (gray * 16)
- 00000142  03 C2		       add    eax, edx  ; computing color + (gray * 16)
- 00000144  E8 00000000 E	       call   SetTextColor
+ 0000013A  8B 04 9D		       mov    eax, [colorDisplay + ebx*4]   ; loading random color
+	   000001C0 R
+ 00000141  BA 00000008		       mov    edx, gray  ; loading background color gray
+ 00000146  C1 E2 04		       shl    edx, 4   ; computing (gray * 16)
+ 00000149  03 C2		       add    eax, edx  ; computing color + (gray * 16)
+ 0000014B  E8 00000000 E	       call   SetTextColor
 
 				       ; Saving current color text for later comparison
- 00000149  8B 04 9D		       mov    eax, [colorText + ebx*4]  ; loading same random index into colorText
-	   00000157 R
- 00000150  A3 0000000C R	       mov    currColor, eax   ; saving text as current color
+ 00000150  8B 04 9D		       mov    eax, [colorText + ebx*4]  ; loading same random index into colorText
+	   00000188 R
+ 00000157  A3 0000000C R	       mov    currColor, eax   ; saving text as current color
+
+				       ; Saving lowercase color test for later comparison
+ 0000015C  8B 04 9D		       mov    eax, [colorTextLower + ebx*4]  ; loading same random index into colorText
+	   000001A4 R
+ 00000163  A3 00000010 R	       mov    currColorL, eax   ; saving text as current color
 
 
 				       ; Random Text
- 00000155  B8 00000008		       mov   eax, 8  ; allowing generation of 0-7
- 0000015A  E8 00000000 E	       call   RandomRange
- 0000015F  8B D8		       mov    ebx, eax  ; loading random number
+ 00000168  B8 00000007		       mov   eax, 7  ; allowing generation of 0-6
+ 0000016D  E8 00000000 E	       call   RandomRange
+ 00000172  8B D8		       mov    ebx, eax  ; loading random number
 
 				       ; Getting color text from array
- 00000161  8B 14 9D		       mov    edx, [colorText + ebx*4]   ; loading random color text
-	   00000157 R
- 00000168  E8 00000000 E	       call   WriteString
+ 00000174  8B 14 9D		       mov    edx, [colorText + ebx*4]   ; loading random color text
+	   00000188 R
+ 0000017B  E8 00000000 E	       call   WriteString
 
 				       ; Getting user input
- 0000016D  B8 0000008F		       mov   eax, white + (gray * 16)
- 00000172  E8 00000000 E	       call  SetTextColor
- 00000177  BA 0000003B R	       mov   edx, OFFSET guessText   ; writing guess text prompt
- 0000017C  E8 00000000 E	       call  WriteString
+ 00000180  B8 0000008F		       mov   eax, white + (gray * 16)
+ 00000185  E8 00000000 E	       call  SetTextColor
+ 0000018A  BA 0000003F R	       mov   edx, OFFSET guessText   ; writing guess text prompt
+ 0000018F  E8 00000000 E	       call  WriteString
 
- 00000181  BA 0000004B R	       mov   edx, OFFSET userGuess   ; loading userGuess
- 00000186  B9 00000014		       mov   ecx, 20    ; max of 20 chars for input
- 0000018B  E8 00000000 E	       call  ReadString    ; reading input
+ 00000194  BA 00000058 R	       mov   edx, OFFSET userGuess   ; loading userGuess
+ 00000199  B9 00000014		       mov   ecx, 20    ; max of 20 chars for input
+ 0000019E  E8 00000000 E	       call  ReadString    ; reading input
 
 				       ; COMPARING STRINGS SECTION
 				       ;loading strings
- 00000190  8B 35 0000000C R	       mov esi, [currColor]  ; Point to first string
- 00000196  BF 0000004B R	       mov edi, OFFSET userGuess  ; Point to second string
+ 000001A3  8B 35 0000000C R	       mov esi, [currColor]  ; Point to first string
+ 000001A9  BF 00000058 R	       mov edi, OFFSET userGuess  ; Point to second string
 				       
 				       ;looping through strings
- 0000019B			       compare_loop:
- 0000019B  8A 06		            mov al, [esi]  ; Load currColor
- 0000019D  8A 1F		            mov bl, [edi]  ; Load from userGuess
- 0000019F  3A C3		            cmp al, bl
- 000001A1  75 11		            jne not_equal  ; not equal -- jumps out of loop here
+ 000001AE			       compare_loop:
+ 000001AE  8A 06		            mov al, [esi]  ; Load currColor
+ 000001B0  8A 1F		            mov bl, [edi]  ; Load from userGuess
+ 000001B2  3A C3		            cmp al, bl
+ 000001B4  75 11		            jne case_check     ; not equal -- jumps out of loop here
 				    
- 000001A3  3C 00		            cmp al, 0      ; Check for null terminator
- 000001A5  74 04		            je strings_match ; If null terminator reached, strings match
+ 000001B6  3C 00		            cmp al, 0          ; Check for null terminator
+ 000001B8  74 04		            je strings_match   ; If null terminator reached, strings match
 				    
- 000001A7  46			            inc esi        ; Move to next in currColor
- 000001A8  47			            inc edi        ; userGuess
- 000001A9  EB F0		            jmp compare_loop  ;normal loop proc
+ 000001BA  46			            inc esi            ; Move to next in currColor
+ 000001BB  47			            inc edi            ; userGuess
+ 000001BC  EB F0		            jmp compare_loop   ;normal loop proc
 
- 000001AB			        strings_match:
- 000001AB  83 05 00000197 R	            add score, 1  ; Increment score
+ 000001BE			        strings_match:
+ 000001BE  83 05 000001DC R	            add score, 1       ; Increment score
 	   01
- 000001B2  EB 00		            jmp not_equal
+ 000001C5  EB 1D		            jmp not_equal
 
- 000001B4			        not_equal: ;not equal -- jumps past inc
+ 000001C7			        case_check:                    ; Doing second round of checks in case input is lowercase
+ 000001C7  8B 35 00000010 R	            mov esi, [currColorL]       ; Point to first string
+ 000001CD  BF 00000058 R	            mov edi, OFFSET userGuess  ; Point to second string
+ 000001D2  EB 00		            jmp compare_loop2
+
+ 000001D4			        compare_loop2:
+ 000001D4  8A 06		            mov al, [esi]      ; Load currColor
+ 000001D6  8A 1F		            mov bl, [edi]      ; Load from userGuess
+ 000001D8  3A C3		            cmp al, bl
+ 000001DA  75 08		            jne not_equal      ; not equal -- jumps out of loop here
+				    
+ 000001DC  3C 00		            cmp al, 0          ; Check for null terminator
+ 000001DE  74 DE		            je strings_match   ; If null terminator reached, strings match
+				    
+ 000001E0  46			            inc esi            ; Move to next in currColor
+ 000001E1  47			            inc edi            ; userGuess
+ 000001E2  EB F0		            jmp compare_loop2  ;normal loop proc
+
+ 000001E4			        not_equal: ;not equal -- jumps past inc
 
 				       ; Timer
- 000001B4  E8 00000000 E	       call  GetMseconds ; getting ms
- 000001B9  2B 05 00000000 R	       sub   eax, startTime ; subtracting to get elapsed time
- 000001BF  3D 00007530		       cmp   eax, 30000 ; 30 second timer
+ 000001E4  E8 00000000 E	       call  GetMseconds ; getting ms
+ 000001E9  2B 05 00000000 R	       sub   eax, startTime ; subtracting to get elapsed time
+ 000001EF  3D 00007530		       cmp   eax, 30000 ; 30 second timer
 
- 000001C4  0F 8C FFFFFF5D	       jl    show_words
- 000001CA  EB 00		    jmp   game_over
+ 000001F4  0F 8C FFFFFF2D	       jl    show_words
+ 000001FA  EB 00		    jmp   game_over
 
- 000001CC			game_over:
+ 000001FC			game_over:
 				; Displaying game over & exiting program
- 000001CC  BA 00000125 R	    mov    edx, OFFSET space
- 000001D1  E8 00000000 E	    call   WriteString
- 000001D6  E8 00000000 E	    call	 Crlf
- 000001DB  BA 00000125 R	    mov    edx, OFFSET space
- 000001E0  E8 00000000 E	    call   WriteString
- 000001E5  E8 00000000 E	    call	 Crlf
- 000001EA  B8 0000008F		    mov	 eax, white + (gray * 16)
- 000001EF  E8 00000000 E	    call	 SetTextColor
- 000001F4  BA 00000030 R	    mov	 edx, OFFSET gameover
- 000001F9  E8 00000000 E	    call	 WriteString
- 000001FE  E8 00000000 E	    call	 Crlf
+ 000001FC  BA 00000132 R	    mov    edx, OFFSET space
+ 00000201  E8 00000000 E	    call   WriteString
+ 00000206  E8 00000000 E	    call	 Crlf
+ 0000020B  BA 00000132 R	    mov    edx, OFFSET space
+ 00000210  E8 00000000 E	    call   WriteString
+ 00000215  E8 00000000 E	    call	 Crlf
+ 0000021A  B8 0000008F		    mov	 eax, white + (gray * 16)
+ 0000021F  E8 00000000 E	    call	 SetTextColor
+ 00000224  BA 00000034 R	    mov	 edx, OFFSET gameover
+ 00000229  E8 00000000 E	    call	 WriteString
+ 0000022E  E8 00000000 E	    call	 Crlf
 				        
 
- 00000203  BA 0000019B R	    mov edx, OFFSET scoreStr
- 00000208  E8 00000000 E	    call     WriteString
- 0000020D  A1 00000197 R	    mov eax, score
- 00000212  E8 00000000 E	    call     WriteDec
- 00000217  E8 00000000 E	    call     Crlf
+ 00000233  BA 000001E4 R	    mov edx, OFFSET scoreStr
+ 00000238  E8 00000000 E	    call     WriteString
+ 0000023D  A1 000001DC R	    mov eax, score
+ 00000242  E8 00000000 E	    call     WriteDec
+ 00000247  BA 0000004F R	    mov edx, OFFSET scoreText
+ 0000024C  E8 00000000 E	    call     WriteString
+ 00000251  A1 000001E0 R	    mov eax, total
+ 00000256  E8 00000000 E	    call     WriteDec
 				    exit
- 0000021C  6A 00	   *	    push   +000000000h
- 0000021E  E8 00000000 E   *	    call   ExitProcess
+ 0000025B  6A 00	   *	    push   +000000000h
+ 0000025D  E8 00000000 E   *	    call   ExitProcess
 
- 00000223			main ENDP
+ 00000262			main ENDP
 				END main
 
 
-Microsoft (R) Macro Assembler Version 14.41.34123.0	    03/31/25 20:13:59
+Microsoft (R) Macro Assembler Version 14.41.34123.0	    04/22/25 14:33:50
 color_game.asm						     Symbols 2 - 1
 
 
@@ -405,8 +454,8 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 000001A3 Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 00000223 Para	  Public  'CODE'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 000001EC Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000262 Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -513,14 +562,16 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000223 Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000262 Public STDCALL
   wait_start . . . . . . . . . .	L Near	 000000D4 _TEXT	
   start_game . . . . . . . . . .	L Near	 000000DF _TEXT	
   show_words . . . . . . . . . .	L Near	 00000127 _TEXT	
-  compare_loop . . . . . . . . .	L Near	 0000019B _TEXT	
-  strings_match  . . . . . . . .	L Near	 000001AB _TEXT	
-  not_equal  . . . . . . . . . .	L Near	 000001B4 _TEXT	
-  game_over  . . . . . . . . . .	L Near	 000001CC _TEXT	
+  compare_loop . . . . . . . . .	L Near	 000001AE _TEXT	
+  strings_match  . . . . . . . .	L Near	 000001BE _TEXT	
+  case_check . . . . . . . . . .	L Near	 000001C7 _TEXT	
+  compare_loop2  . . . . . . . .	L Near	 000001D4 _TEXT	
+  not_equal  . . . . . . . . . .	L Near	 000001E4 _TEXT	
+  game_over  . . . . . . . . . .	L Near	 000001FC _TEXT	
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
@@ -739,31 +790,35 @@ VK_UP  . . . . . . . . . . . . .	Number	 00000026h
 WINDOW_BUFFER_SIZE_EVENT . . . .	Number	 00000004h   
 WriteConsoleOutputCharacter  . .	Text   	 WriteConsoleOutputCharacterA
 WriteConsole . . . . . . . . . .	Text   	 WriteConsoleA
-blackText  . . . . . . . . . . .	Byte	 00000146 _DATA	
+blackTextL . . . . . . . . . . .	Byte	 0000017C _DATA	
+blackText  . . . . . . . . . . .	Byte	 00000153 _DATA	
 black  . . . . . . . . . . . . .	Number	 00000000h   
-blueText . . . . . . . . . . . .	Byte	 0000013A _DATA	
+blueTextL  . . . . . . . . . . .	Byte	 00000170 _DATA	
+blueText . . . . . . . . . . . .	Byte	 00000147 _DATA	
 blue . . . . . . . . . . . . . .	Number	 00000001h   
-border . . . . . . . . . . . . .	Byte	 000000B7 _DATA	
+border . . . . . . . . . . . . .	Byte	 000000C4 _DATA	
 brown  . . . . . . . . . . . . .	Number	 00000006h   
-colorDisplay . . . . . . . . . .	DWord	 00000177 _DATA	
-colorText  . . . . . . . . . . .	DWord	 00000157 _DATA	
+colorDisplay . . . . . . . . . .	DWord	 000001C0 _DATA	
+colorTextLower . . . . . . . . .	DWord	 000001A4 _DATA	
+colorText  . . . . . . . . . . .	DWord	 00000188 _DATA	
+currColorL . . . . . . . . . . .	DWord	 00000010 _DATA	
 currColor  . . . . . . . . . . .	DWord	 0000000C _DATA	
 currTime . . . . . . . . . . . .	DWord	 00000004 _DATA	
 currWord . . . . . . . . . . . .	DWord	 00000008 _DATA	
 cyan . . . . . . . . . . . . . .	Number	 00000003h   
 exit . . . . . . . . . . . . . .	Text   	 INVOKE ExitProcess,0
-game1  . . . . . . . . . . . . .	Byte	 00000010 _DATA	
-game2  . . . . . . . . . . . . .	Byte	 00000019 _DATA	
-game3  . . . . . . . . . . . . .	Byte	 0000001D _DATA	
-game4  . . . . . . . . . . . . .	Byte	 00000022 _DATA	
-game5  . . . . . . . . . . . . .	Byte	 00000029 _DATA	
-game6  . . . . . . . . . . . . .	Byte	 0000002E _DATA	
-gameover . . . . . . . . . . . .	Byte	 00000030 _DATA	
-grayText . . . . . . . . . . . .	Byte	 00000152 _DATA	
+game1  . . . . . . . . . . . . .	Byte	 00000014 _DATA	
+game2  . . . . . . . . . . . . .	Byte	 0000001D _DATA	
+game3  . . . . . . . . . . . . .	Byte	 00000021 _DATA	
+game4  . . . . . . . . . . . . .	Byte	 00000026 _DATA	
+game5  . . . . . . . . . . . . .	Byte	 0000002D _DATA	
+game6  . . . . . . . . . . . . .	Byte	 00000032 _DATA	
+gameover . . . . . . . . . . . .	Byte	 00000034 _DATA	
 gray . . . . . . . . . . . . . .	Number	 00000008h   
-greenText  . . . . . . . . . . .	Byte	 00000134 _DATA	
+greenTextL . . . . . . . . . . .	Byte	 0000016A _DATA	
+greenText  . . . . . . . . . . .	Byte	 00000141 _DATA	
 green  . . . . . . . . . . . . .	Number	 00000002h   
-guessText  . . . . . . . . . . .	Byte	 0000003B _DATA	
+guessText  . . . . . . . . . . .	Byte	 0000003F _DATA	
 lightBlue  . . . . . . . . . . .	Number	 00000009h   
 lightCyan  . . . . . . . . . . .	Number	 0000000Bh   
 lightGray  . . . . . . . . . . .	Number	 00000007h   
@@ -771,21 +826,27 @@ lightGreen . . . . . . . . . . .	Number	 0000000Ah
 lightMagenta . . . . . . . . . .	Number	 0000000Dh   
 lightRed . . . . . . . . . . . .	Number	 0000000Ch   
 magenta  . . . . . . . . . . . .	Number	 00000005h   
-purpleText . . . . . . . . . . .	Byte	 0000013F _DATA	
-redText  . . . . . . . . . . . .	Byte	 00000129 _DATA	
+purpleTextL  . . . . . . . . . .	Byte	 00000175 _DATA	
+purpleText . . . . . . . . . . .	Byte	 0000014C _DATA	
+redTextL . . . . . . . . . . . .	Byte	 0000015F _DATA	
+redText  . . . . . . . . . . . .	Byte	 00000136 _DATA	
 red  . . . . . . . . . . . . . .	Number	 00000004h   
-return . . . . . . . . . . . . .	Byte	 00000127 _DATA	
-rules  . . . . . . . . . . . . .	Byte	 00000060 _DATA	
-scoreStr . . . . . . . . . . . .	Byte	 0000019B _DATA	
-score  . . . . . . . . . . . . .	DWord	 00000197 _DATA	
-space  . . . . . . . . . . . . .	Byte	 00000125 _DATA	
+return . . . . . . . . . . . . .	Byte	 00000134 _DATA	
+rules  . . . . . . . . . . . . .	Byte	 0000006D _DATA	
+scoreStr . . . . . . . . . . . .	Byte	 000001E4 _DATA	
+scoreText  . . . . . . . . . . .	Byte	 0000004F _DATA	
+score  . . . . . . . . . . . . .	DWord	 000001DC _DATA	
+space  . . . . . . . . . . . . .	Byte	 00000132 _DATA	
 startTime  . . . . . . . . . . .	DWord	 00000000 _DATA	
-start  . . . . . . . . . . . . .	Byte	 00000114 _DATA	
-userGuess  . . . . . . . . . . .	Byte	 0000004B _DATA	
-whiteText  . . . . . . . . . . .	Byte	 0000014C _DATA	
+start  . . . . . . . . . . . . .	Byte	 00000121 _DATA	
+total  . . . . . . . . . . . . .	DWord	 000001E0 _DATA	
+userGuess  . . . . . . . . . . .	Byte	 00000058 _DATA	
+whiteTextL . . . . . . . . . . .	Byte	 00000182 _DATA	
+whiteText  . . . . . . . . . . .	Byte	 00000159 _DATA	
 white  . . . . . . . . . . . . .	Number	 0000000Fh   
 wsprintf . . . . . . . . . . . .	Text   	 wsprintfA
-yellowText . . . . . . . . . . .	Byte	 0000012D _DATA	
+yellowTextL  . . . . . . . . . .	Byte	 00000163 _DATA	
+yellowText . . . . . . . . . . .	Byte	 0000013A _DATA	
 yellow . . . . . . . . . . . . .	Number	 0000000Eh   
 
 	   0 Warnings
